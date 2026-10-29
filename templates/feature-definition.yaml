@@ -1,0 +1,13 @@
+# Definition record for one published feature, shown for TradeFlow.vwap_buy.
+module: TradeFlow
+feature: vwap_buy
+feature_version: 2.0.0
+type: double
+description: Volume-weighted average trade price. Buyer-initiated trades only (the buyer was the aggressor).
+unit: quote asset per unit of base asset
+inputs: [exchange trades]
+markets: [spot, perpetual]
+interval: '[start_time_utc, end_time_utc) UTC, hourly'
+available_at: end_time_utc
+missing_value: NaN when not computable
+lookback: none beyond the interval
