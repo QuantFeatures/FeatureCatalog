@@ -35,4 +35,4 @@ See `templates/feature-definition.yaml`, `FEATURE_VALIDITY.md`, and `FEATURE_VER
 - [Methodology](docs/METHODOLOGY.md): high-level processing and quality controls.
 - [Module definitions](docs/modules/): inputs, coverage, and field dictionaries for each published module.
 
-[Feature samples](https://github.com/QuantFeatures/FeatureSamples) · Hugging Face: [Binance](https://huggingface.co/datasets/QuantFeatures/binance-hourly-features), [OKX](https://huggingface.co/datasets/QuantFeatures/okx-hourly-features), [Hyperliquid](https://huggingface.co/datasets/QuantFeatures/hyperliquid-hourly-features) · Partnerships: [QuantFeatures@gmail.com](mailto:QuantFeatures@gmail.com)
+[Feature samples](https://github.com/QuantFeatures/FeatureSamples) · Hugging Face: [Binance](https://huggingface.co/datasets/QuantFeatures/binance-hourly-features), [OKX](https://huggingface.co/datasets/QuantFeatures/okx-hourly-features), [Bybit](https://huggingface.co/datasets/QuantFeatures/bybit-hourly-features), [Hyperliquid](https://huggingface.co/datasets/QuantFeatures/hyperliquid-hourly-features) · Partnerships: [QuantFeatures@gmail.com](mailto:QuantFeatures@gmail.com)
