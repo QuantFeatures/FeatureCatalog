@@ -14,6 +14,18 @@ Coverage is explicit rather than implied. The current sample dataset (feature ve
 - Intervals are hourly and labelled by interval start time (see [DATA_SPECIFICATION.md](DATA_SPECIFICATION.md)); the time zone is UTC.
 - Every venue uses the same schema for a given module.
 
+## Hyperliquid: every UTC day
+
+Two more Hyperliquid datasets hold every UTC day rather than one day a month, for the BCH, BNB, BTC, ETH, HYPE, XRP perpetuals at 1 hour (feature version `3.1.0`):
+
+| Dataset | Days | Modules | Source | Published |
+| --- | --- | --- | --- | --- |
+| Continuous sample | 2026-01-01 to 2026-11-02 | 13: `TradeFlow`, `TradeTick`, `TradeCovar`, `TradeCovarPlus`, `TradeStats`, `TradeGroup`, `TradeGroupPlus`, `TradeLarge`, `TradeGradient`, `TradeImpact`, `FundingPaid`, `LiqFlow`, `LiqStats` | Hyperliquid's archive of node trade fills; funding settlements from its public API | [Hugging Face](https://huggingface.co/datasets/QuantFeatures/hyperliquid-hourly-features-continuous), [Kaggle](https://www.kaggle.com/datasets/drdanguo/quantfeatures-hyperliquid-hourly-continuous) |
+| Daily update | From 2026-11-05; each UTC day is added the next day | 16: `TradeFlow`, `TradeTick`, `TradeCovar`, `TradeCovarPlus`, `TradeStats`, `TradeGroup`, `TradeGroupPlus`, `TradeLarge`, `TradeGradient`, `TradeImpact`, `QuoteBasic`, `FundingRate`, `FundingPaid`, `OpenIntBasic`, `OpenIntPlus`, `OpenIntGradient` | QuantFeatures' recording of Hyperliquid's public websocket streams; funding settlements from its public API | [Hugging Face](https://huggingface.co/datasets/QuantFeatures/hyperliquid-hourly-features-delay1), [Kaggle](https://www.kaggle.com/datasets/drdanguo/quantfeatures-hyperliquid-hourly-delay1) |
+
+- Days are consecutive, so values carried from one interval to the next, such as the previous price and tick direction, continue across midnight UTC.
+- These datasets are published as one Parquet file per module; the file layout below applies to the monthly sample.
+
 ## Later listings
 
 Some instruments start after their venue's first sample day because they were not yet listed:
