@@ -25,6 +25,7 @@ Two more Hyperliquid datasets hold every UTC day rather than one day a month, fo
 
 - Days are consecutive, so values carried from one interval to the next, such as the previous price and tick direction, continue across midnight UTC.
 - These datasets are published as one Parquet file per module; the file layout below applies to the monthly sample.
+- Daily update: when our recording is interrupted for 60 seconds or more, every interval that overlaps the interruption has all feature values NaN (count columns null); the rows are kept. The dataset card and `manifest.json` (`unavailable_intervals`) list these intervals. `FundingPaid` comes from the exchange API and is not affected.
 
 ## Later listings
 
