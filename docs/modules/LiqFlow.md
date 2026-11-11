@@ -7,7 +7,7 @@ Interval summaries of liquidation counts, quantities, values, and directional co
 - **Coverage, Binance:** 2019-12-01 through 2026-10-01 (interval-start dates); 1,992 perp hourly files.
 - **Coverage, OKX:** 2020-01-01 through 2026-10-01 (interval-start dates); 1,968 perp hourly files.
 - **Coverage, Bybit:** 2020-06-01 through 2026-10-01 (interval-start dates); 1,848 perp hourly files.
-- **Coverage, Hyperliquid continuous sample (`3.1.0`):** every UTC day, 2026-01-01 through 2026-11-02; 7,344 perp hourly files.
+- **Coverage, Hyperliquid continuous sample (`3.1.0`):** every UTC day, 2026-01-01 through 2026-11-04; 7,392 perp hourly files.
 ## Interpretation and disclosure
 Each row is one instrument in one interval. Each definition states what the field measures and its unit; computation methods and implementation details are proprietary.
 ## Notes

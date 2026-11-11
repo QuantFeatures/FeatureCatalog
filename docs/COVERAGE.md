@@ -14,18 +14,29 @@ Coverage is explicit rather than implied. The current sample dataset (feature ve
 - Intervals are hourly and labelled by interval start time (see [DATA_SPECIFICATION.md](DATA_SPECIFICATION.md)); the time zone is UTC.
 - Every venue uses the same schema for a given module.
 
-## Hyperliquid: every UTC day
+## Hyperliquid: every UTC day of 2026, and live
 
-Two more Hyperliquid datasets hold every UTC day rather than one day a month, for the BCH, BNB, BTC, ETH, HYPE, XRP perpetuals at 1 hour (feature version `3.1.0`):
+Two more Hyperliquid datasets hold every UTC day rather than one day a month, for the BCH, BNB, BTC, ETH, HYPE, XRP perpetuals (feature version `3.1.0`):
 
-| Dataset | Days | Modules | Source | Published |
+| Dataset | Days | Intervals | Update | Published |
 | --- | --- | --- | --- | --- |
-| Continuous sample | 2026-01-01 to 2026-11-02 | 13: `TradeFlow`, `TradeTick`, `TradeCovar`, `TradeCovarPlus`, `TradeStats`, `TradeGroup`, `TradeGroupPlus`, `TradeLarge`, `TradeGradient`, `TradeImpact`, `FundingPaid`, `LiqFlow`, `LiqStats` | Hyperliquid's archive of node trade fills; funding settlements from its public API | [Hugging Face](https://huggingface.co/datasets/QuantFeatures/hyperliquid-hourly-features-continuous), [Kaggle](https://www.kaggle.com/datasets/drdanguo/quantfeatures-hyperliquid-hourly-continuous) |
-| Daily update | From 2026-11-05; each UTC day is added the next day | 16: `TradeFlow`, `TradeTick`, `TradeCovar`, `TradeCovarPlus`, `TradeStats`, `TradeGroup`, `TradeGroupPlus`, `TradeLarge`, `TradeGradient`, `TradeImpact`, `QuoteBasic`, `FundingRate`, `FundingPaid`, `OpenIntBasic`, `OpenIntPlus`, `OpenIntGradient` | QuantFeatures' recording of Hyperliquid's public websocket streams; funding settlements from its public API | [Hugging Face](https://huggingface.co/datasets/QuantFeatures/hyperliquid-hourly-features-delay1), [Kaggle](https://www.kaggle.com/datasets/drdanguo/quantfeatures-hyperliquid-hourly-delay1) |
+| Hyperliquid Features 2026 | 2026-01-01 to the previous UTC day | 1 hour and 10 minutes | Daily, after 01:30 UTC, adds the previous UTC day | [Hugging Face](https://huggingface.co/datasets/QuantFeatures/hyperliquid-features), [Kaggle](https://www.kaggle.com/datasets/drdanguo/quantfeatures-hyperliquid-hourly-features) |
+| Hyperliquid Live 10-Minute Features | The last 7 UTC days, today included | 10 minutes | Every 10 minutes, a few minutes after each interval ends | [Hugging Face](https://huggingface.co/datasets/QuantFeatures/hyperliquid-live-features), [Kaggle](https://www.kaggle.com/datasets/drdanguo/quantfeatures-hyperliquid-live-features) |
 
-- Days are consecutive, so values carried from one interval to the next, such as the previous price and tick direction, continue across midnight UTC.
-- These datasets are published as one Parquet file per module; the file layout below applies to the monthly sample.
-- Daily update: when our recording is interrupted for 60 seconds or more, every interval that overlaps the interruption has all feature values NaN (count columns null); the rows are kept. The dataset card and `manifest.json` (`unavailable_intervals`) list these intervals. `FundingPaid` comes from the exchange API and is not affected.
+The 2026 dataset changes source on 2026-11-05, so its modules depend on the period:
+
+| Period | Source | Modules |
+| --- | --- | --- |
+| 2026-01-01 to 2026-11-04 | Hyperliquid's archive of node trade fills (trades only); funding settlements from its public API | 13: `TradeFlow`, `TradeTick`, `TradeCovar`, `TradeCovarPlus`, `TradeStats`, `TradeGroup`, `TradeGroupPlus`, `TradeLarge`, `TradeGradient`, `TradeImpact`, `FundingPaid`, `LiqFlow`, `LiqStats` |
+| From 2026-11-05 | QuantFeatures' recording of Hyperliquid's public websocket trade, best bid/offer and asset context streams; funding settlements from its public API | 16: `TradeFlow`, `TradeTick`, `TradeCovar`, `TradeCovarPlus`, `TradeStats`, `TradeGroup`, `TradeGroupPlus`, `TradeLarge`, `TradeGradient`, `TradeImpact`, `QuoteBasic`, `FundingRate`, `FundingPaid`, `OpenIntBasic`, `OpenIntPlus`, `OpenIntGradient` |
+
+The live dataset has the 15 modules recorded from 2026-11-05 except `FundingPaid`.
+
+- `FundingPaid` is the hourly funding settlement, so it has no 10-minute files.
+- Days are consecutive, so values carried from one interval to the next, such as the previous price and tick direction, continue across midnight UTC. On 2026-11-05, where the source changes, they start fresh.
+- These datasets are published as one Parquet file per module and interval: `data/<Module>/perp.parquet` (1 hour) and `data/10min/<Module>/perp.parquet` (10 minutes); the file layout below applies to the monthly sample.
+- Live intervals are computed as each interval ends. The next day the same intervals are computed again from the full day's recording for the 2026 dataset; trade modules match exactly, and quote, funding and open-interest modules differ slightly in a few intervals a day. The 2026 dataset is the reference.
+- From 2026-11-05: when our recording is interrupted for 60 seconds or more, every interval that overlaps the interruption has all feature values NaN (count columns null); the rows are kept. The dataset cards and `manifest.json` (`unavailable_intervals`, `unavailable_intervals_10min`) list these intervals. `FundingPaid` comes from the exchange API and is not affected.
 
 ## Later listings
 
@@ -59,7 +70,8 @@ data/features/<module>/eod/3.0.0/<exchange>/<spot|perp>/usdt/1h/YYYY/MM/DD/<modu
 
 `<exchange>` is one of `binance`, `okx`, `bybit`, `hyperliquid`. `YYYY/MM/DD` and `YYYYMMDD.HHMMSS` are the UTC interval start. Each `.pqt.gz` is a gzip-compressed Parquet file.
 
-The same data is also published on Hugging Face, one dataset per venue with one Parquet file per module and market:
-[QuantFeatures/binance-hourly-features](https://huggingface.co/datasets/QuantFeatures/binance-hourly-features), [QuantFeatures/okx-hourly-features](https://huggingface.co/datasets/QuantFeatures/okx-hourly-features), [QuantFeatures/bybit-hourly-features](https://huggingface.co/datasets/QuantFeatures/bybit-hourly-features), [QuantFeatures/hyperliquid-hourly-features](https://huggingface.co/datasets/QuantFeatures/hyperliquid-hourly-features).
+The same data is also published as one dataset with one Parquet file per module and market, on
+[Hugging Face](https://huggingface.co/datasets/QuantFeatures/crypto-hourly-features-monthly) and
+[Kaggle](https://www.kaggle.com/datasets/drdanguo/quantfeatures-crypto-hourly-features-monthly).
 
 A missing file, or a missing instrument row within a file, means no published record for that module, instrument, and interval; it must not be interpreted as zero activity.
